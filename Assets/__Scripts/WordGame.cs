@@ -31,6 +31,8 @@ public class WordGame : MonoBehaviour {
     public List<Wyrd> wyrds;
     public List<Letter> bigLetters;
     public List<Letter> bigLettersActive;
+    public string testWord;
+    private string upperCase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private Transform letterAnchor, bigletterAnchor;
 
@@ -212,6 +214,133 @@ public class WordGame : MonoBehaviour {
             }
         }
 
+    void Update()
+    {
+        Letter ltr;
+        char c;
+
+        switch (mode)
+        {
+            case GameMode.inLevel:
+                foreach (char cIt in Input.inputString)
+                {
+                    c = System.Char.ToUpperInvariant(cIt);
+                    if (upperCase.Contains(c))
+                    {
+                        ltr = FindNextLetterByChar(c);
+                        if (ltr != null)
+                        {
+                            testWord += c.ToString();
+                            bigLettersActive.Add(ltr);
+                            bigLetters.Remove(ltr);
+                            ltr.color = bigColorSelected;
+                            ArrangeBigLetters();
+                        }
+                    }
+
+                    if (c == '\b')
+                    {
+                        if (bigLettersActive.Count == 0) return;
+                        if (testWord.Length > 1)
+                        {
+                            testWord = testWord.Substring(0, testWord.Length - 1);
+                        } else
+                        {
+                            testWord = "";
+                        }
+
+                        ltr = bigLettersActive[bigLettersActive.Count - 1];
+                        bigLettersActive.Remove(ltr);
+                        ltr.color = bigColorDim;
+                        ArrangeBigLetters();
+                    }
+
+                    if (c=='\n' || c == '\r')
+                    {
+                        CheckWord();
+                    }
+
+                    if (c == ' ')
+                    {
+                        bigLetters = ShuffleLetters(bigLetters);
+                        ArrangeBigLetters();
+                    }
+                }
+                break;
+        }
     }
+
+    Letter FindNextLetterByChar(char c)
+    {
+        foreach (Letter ltr in bigLetters)
+        {
+            if (ltr.c == c)
+            {
+                return (ltr);
+            }
+        }
+        return (null);
+    }
+
+    public void CheckWord()
+    {
+        string subWord;
+        bool foundTestWord = false;
+        List<int> containedWords = new List<int>();
+
+        List<int> containsWords = new List<int>();
+
+        for (int i=0; i<currLevel.subWords.Count; i++)
+        {
+            if (wyrds[i].found)
+            {
+                continue;
+            }
+
+            subWord = currLevel.subWords[i];
+            if (string.Equals(testWord, subWord))
+            {
+                HighlightWyrd(i);
+                ScoreManager.SCORE(wyrds[i], 1);
+                foundTestWord = true;
+            } else if (testWord.Contains(subWord))
+            {
+                containedWords.Add(i);
+            }
+        }
+        if (foundTestWord)
+        {
+            int numContained = containedWords.Count;
+            int ndx;
+            for (int i=0; i < containedWords.Count; i++)
+            {
+                ndx = numContained - i - 1;
+                HighlightWyrd(containedWords[ndx]);
+                ScoreManager.SCORE(wyrds[containedWords[ndx]], i + 1);
+            }
+        }
+        ClearBigLettersActive();
+    }
+
+    void HighlightWyrd(int ndx)
+    {
+        wyrds[ndx].found = true;
+        wyrds[ndx].color = (wyrds[ndx].color + Color.white) / 2f;
+        wyrds[ndx].visible = true;
+    }
+
+    void ClearBigLettersActive()
+    {
+        testWord = "";
+        foreach (Letter ltr in bigLettersActive)
+        {
+            bigLetters.Add(ltr);
+            ltr.color = bigColorDim;
+        }
+        bigLettersActive.Clear();
+        ArrangeBigLetters();
+    }
+
+}
 
 
