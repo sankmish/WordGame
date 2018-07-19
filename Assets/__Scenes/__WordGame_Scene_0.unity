@@ -229,4 +229,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6091785c96d1e1a49994e4213ebc4b5b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabLetter: {fileID: 1512376744724942, guid: 7959ff97ac3cd374bb9c5410aa264686,
+    type: 2}
+  wordArea:
+    serializedVersion: 2
+    x: -24
+    y: 19
+    width: 48
+    height: 28
+  letterSize: 1.5
+  showAllWyrds: 1
+  bigLetterSize: 4
+  bigColorDim: {r: 0.8, g: 0.8, b: 0.8, a: 1}
+  bigColorSelected: {r: 1, g: 0.9, b: 0.7, a: 1}
+  bigLetterCenter: {x: 0, y: -16, z: 0}
   mode: 0
+  currLevel:
+    levelNum: 0
+    longWordIndex: 0
+    word: 
+    subWords: []
+  bigLetters: []
+  bigLettersActive: []

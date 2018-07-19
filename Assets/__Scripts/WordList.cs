@@ -26,9 +26,7 @@ public class WordList : MonoBehaviour {
         S = this;
 	}
 
-    static public void INIT(){
-        S.Init();
-    }
+    
     // Update is called once per frame
     void Init () {
         lines = wordListText.text.Split('\n');
@@ -36,10 +34,16 @@ public class WordList : MonoBehaviour {
         StartCoroutine(ParseLines());
 	}
 
+    static public void INIT()
+    {
+        S.Init();
+    }
+
     public IEnumerator ParseLines()
     {
         string word;
         longWords = new List<string>();
+        words = new List<string>();
         for (currLine = 0; currLine < totalLines; currLine++)
         {
             word = lines[currLine];
