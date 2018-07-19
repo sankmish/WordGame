@@ -141,7 +141,9 @@ public class WordGame : MonoBehaviour {
 
                 pos = new Vector3(wordArea.x * left + j * letterSize, wordArea.y, 0);
                 pos.y -= (i % numRows) * letterSize;
+                lett.posImmediate = pos + Vector3.up * (20 + i % numRows);
                 lett.pos = pos;
+                lett.timeStart = Time.time + i * 0.05f;
                 go.transform.localScale = Vector3.one * letterSize;
                 wyrd.Add(lett);
             }
@@ -167,7 +169,10 @@ public class WordGame : MonoBehaviour {
             lett.c = c;
             go.transform.localScale = Vector3.one * bigLetterSize;
             pos = new Vector3(0, -100, 0);
+            lett.posImmediate = pos;
             lett.pos = pos;
+            lett.timeStart = Time.time + currLevel.subWords.Count * 0.05f;
+            lett.easingcurve = Easing.Sin + "-0.18";
             col = bigColorDim;
             lett.color = col;
             lett.visible = true;
